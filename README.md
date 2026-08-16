@@ -61,13 +61,6 @@ Documenting these because debugging cloud infrastructure is its own skill — th
 - **Budget alert set to 0.08% instead of 80%** — Azure's "% of budget" field takes a plain percentage number (`80`), not a decimal fraction (`0.08`). Easy to misread the first time.
 - **Accidentally cloned the repo into `C:\WINDOWS\system32`** — cloned before navigating to a proper project folder. Fixed with `Move-Item` to relocate to `Documents\Projects`. Lesson for next time: always `cd` into the target folder *before* running `git clone`.
 
-### Screenshots
-
-<!-- Add your screenshots to a /screenshots folder in this repo, then reference them below -->
-![Azure ML Studio dashboard](./screenshots/ml-studio-dashboard.png)
-![Resource group verification](./screenshots/resource-group-output.png)
-
----
 
 ## Tech stack (growing each week)
 
