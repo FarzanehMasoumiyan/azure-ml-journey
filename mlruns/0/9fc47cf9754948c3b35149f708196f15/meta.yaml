@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/farza/Documents/Projects/azure-ml-journey/mlruns/0/9fc47cf9754948c3b35149f708196f15/artifacts
+end_time: 1787019130302
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 9fc47cf9754948c3b35149f708196f15
+run_name: kindly-sheep-87
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1787019130212
+status: 3
+tags: []
+user_id: farza

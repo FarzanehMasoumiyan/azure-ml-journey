@@ -1,0 +1,10 @@
+artifact_location: file:///C:/Users/farza/Documents/Projects/azure-ml-journey/mlruns/0/models/m-1ddcefc9a1d14fcea46bc75823f48149/artifacts
+creation_timestamp: 1787018263801
+experiment_id: '0'
+last_updated_timestamp: 1787018270859
+model_id: m-1ddcefc9a1d14fcea46bc75823f48149
+model_type: null
+name: model
+source_run_id: bc0df0867fea47708849710116ef5a96
+status: 2
+status_message: null

@@ -1,0 +1,11 @@
+digest: a3fbca02
+name: dataset
+profile: '{"num_rows": 30, "num_elements": 120}'
+schema: '{"mlflow_colspec": [{"type": "double", "name": "sepal length (cm)", "required":
+  true}, {"type": "double", "name": "sepal width (cm)", "required": true}, {"type":
+  "double", "name": "petal length (cm)", "required": true}, {"type": "double", "name":
+  "petal width (cm)", "required": true}]}'
+source: '{"tags": {"mlflow.user": "farza", "mlflow.source.name": "train.py", "mlflow.source.type":
+  "LOCAL", "mlflow.source.git.commit": "db661895881410f7c2d82f81efb180373b729cf5",
+  "mlflow.source.git.branch": "main", "mlflow.source.git.repoURL": "https://github.com/FarzanehMasoumiyan/azure-ml-journey.git"}}'
+source_type: code
