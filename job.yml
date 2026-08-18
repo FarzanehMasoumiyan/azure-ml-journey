@@ -1,0 +1,6 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+code: .
+command: python train.py --C 0.8
+environment: azureml://registries/azureml/environments/sklearn-1.5/labels/latest
+display_name: week2-iris-training
+experiment_name: azure-ml-journey
