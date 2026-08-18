@@ -2,12 +2,16 @@
 
 Public learning log documenting my path from ML research/teaching background to production-ready Azure ML & MLOps skills — following a structured 12-week plan covering Azure ML, deployment, CI/CD, and GenAI.
 
+## About this repo
+
+I'm using this repo as a public, honest log of building production ML deployment skills — including the setup issues and fixes, not just the polished end state. If you're hiring for a Data Scientist / ML Engineer role and want to see how I approach and debug new tools, this is meant to show that directly.
+
 ## Progress
 
 | Week | Focus | Status |
 |---|---|---|
 | 1 | Cloud foundations — account, resource group, storage, ML workspace | ✅ Done |
-| 2 | Training a model with the Azure ML SDK v2 | ⬜ Upcoming |
+| 2 | Training a model with the Azure ML SDK v2 | ✅ Done |
 | 3 | AI-900/901 Fundamentals certification | ⬜ Upcoming |
 | 4–5 | Deploying a model as a managed online endpoint | ⬜ Upcoming |
 | 6 | CI/CD for ML with GitHub Actions | ⬜ Upcoming |
@@ -68,6 +72,44 @@ Documenting these because debugging cloud infrastructure is its own skill — th
 
 ---
 
-## About this repo
 
-I'm using this repo as a public, honest log of building production ML deployment skills — including the setup issues and fixes, not just the polished end state. If you're hiring for a Data Scientist / ML Engineer role and want to see how I approach and debug new tools, this is meant to show that directly.
+
+## Week 2 — Training & Tracking a Model with the Azure ML SDK v2
+
+**Goal:** Move from local-only training to a real Azure ML job — submitted via the SDK/CLI, run on serverless compute, and tracked with MLflow so metrics are visible in Studio, not just in a terminal.
+
+### What I built
+
+- Python environment (Conda, since I'm on Anaconda) with the Azure ML SDK v2, MLflow, and scikit-learn
+- `test_connection.py` — confirms Python can authenticate to the Azure ML workspace via `MLClient`
+- `train.py` — trains a simple Logistic Regression model on the Iris dataset, with MLflow logging
+- `job.yml` — job definition submitting `train.py` to Azure ML serverless compute
+- Verified metrics landed correctly in Azure ML Studio
+
+### Commands used
+
+```powershell
+conda create -n azureml python=3.10 -y
+conda activate azureml
+pip install azure-ai-ml azure-identity mlflow scikit-learn pandas
+
+python test_connection.py
+python train.py
+
+az ml job create --file job.yml --resource-group rg-ml-journey --workspace-name mlw-ml-journey
+```
+
+### Challenges & how I fixed them
+
+This week had more real debugging than Week 1 — documenting it because tracing a silent metrics failure down to a library incompatibility is a more realistic day-in-the-life than anything that "just worked."
+
+- **File/folder access denied (`train.py`, `.azure` extensions folder)** — Windows had set the wrong owner on these paths, likely from an earlier elevated-PowerShell session. Fixed by running `icacls <path> /grant <username>:F /T` from an Administrator PowerShell to restore full control to my own account, then continuing all regular work from a normal (non-admin) terminal.
+- **`job.yml` failed to parse as YAML** — turned out the file literally contained the PowerShell script text used to create it, not the YAML output. Root cause: a multi-line heredoc (`@"..."@`) got pasted in a way that broke mid-block. Fixed by building the file with individual `Add-Content`/`Set-Content` calls instead of multi-line pasted blocks — more verbose, but immune to paste-related corruption.
+- **`Unknown compute target 'serverless'`** — my job spec explicitly set `compute: azureml:serverless`, but the correct pattern (confirmed against Microsoft's own docs) is to **omit the compute field entirely** — Azure ML defaults to serverless compute automatically when no compute target is specified.
+- **Metrics not appearing in Studio (first cause)** — my script wrapped training in `with mlflow.start_run():`, which created a *nested* MLflow run separate from the run Azure ML had already started for the job. Metrics were being logged correctly, just to the wrong run. Fixed by removing the explicit `start_run()` block.
+- **Metrics still not appearing (real root cause)** — `mlflow.autolog()` was silently failing partway through: `std_log.txt` showed a 404 error hitting an MLflow "logged models" API endpoint that Azure ML's tracking server doesn't yet support. This is a version-compatibility gap between the installed `mlflow` client and Azure's backend, not something autolog's warning made obvious at a glance. Fixed by dropping `autolog()` in favor of explicit `mlflow.log_param()` / `mlflow.log_metric()` calls, which only use MLflow's basic, universally-supported logging API.
+
+### Screenshots
+
+<!-- Add your Week 2 screenshot(s) to /screenshots, then reference below -->
+![Azure ML Studio metrics tab](./screenshots/week2-metrics.png)
